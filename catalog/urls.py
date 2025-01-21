@@ -1,4 +1,4 @@
-from django.urls import path
+from django.urls import path, include
 from django.utils.translation.trans_real import catalog
 
 from catalog.apps import CatalogConfig

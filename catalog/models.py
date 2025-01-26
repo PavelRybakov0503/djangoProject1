@@ -3,12 +3,12 @@ from django.db import models
 
 class Category(models.Model):
     name = models.CharField(
-        max_length=150,
+        max_length=100,
         verbose_name='Наименование',
         help_text='Введите наименование'
     )   # наименование,
     description = models.CharField(
-        max_length=200,
+        max_length=100,
         verbose_name='Описание',
         help_text='Введите описание'
     )  # описание,
@@ -23,12 +23,12 @@ class Category(models.Model):
 
 class Product(models.Model):
     name = models.CharField(
-        max_length=150,
+        max_length=100,
         verbose_name='Наименование',
         help_text='Введите наименование'
     )  # наименование,
     description = models.CharField(
-        max_length=200,
+        max_length=100,
         verbose_name='Описание',
         help_text='Введите описание'
     )  # описание,

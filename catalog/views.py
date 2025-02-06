@@ -1,23 +1,34 @@
-from django.http import HttpResponse
-from django.shortcuts import render
+from itertools import product
+
+from django.shortcuts import render, get_object_or_404
+from django.urls import reverse_lazy
+from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
+
+from catalog.models import Product
 
 
-def home_view(request):
-    return render(request, 'home.html')
+class ProductListView(ListView):
+    model = Product
 
 
-def contacts_view(request):
-    return render(request, 'contacts.html')
+class ProductDetailView(DetailView):
+    model = Product
 
 
-def contact(request):
-    if request.method == 'POST':
-        # Получение данных из формы
-        name = request.POST.get('name')
-        message = request.POST.get('message')
-        # Обработка данных (например, сохранение в БД, отправка email и т. д.)
-        print(name)
-        print(message)
-        # Здесь мы просто возвращаем простой ответ
-        return HttpResponse(f"Спасибо, {name}! Ваше сообщение получено.")
-    return render(request, 'contact.html')
+class ProductCreateView(CreateView):
+    model = Product
+    fields = ("name", "description", "image")
+    success_url = reverse_lazy('catalog:product_list')
+
+
+class ProductUpdateView(UpdateView):
+    model = Product
+    fields = ("name", "description", "image")
+    success_url = reverse_lazy('catalog:product_list')
+
+
+class ProductDeleteView(DeleteView):
+    model = Product
+    success_url = reverse_lazy('catalog:product_list')
+
+

@@ -68,7 +68,14 @@ class Product(models.Model):
         verbose_name='Дата последнего изменения',
         help_text='Дата последнего изменения',
         auto_now=True
-    )  # дата последнего изменения
+    )
+    # stock = models.PositiveIntegerField(
+    #     verbose_name="Количество в наличии"
+    # )
+    # is_publish = models.BooleanField(
+    #     default=False,
+    #     verbose_name="Опубликовать продукт?"
+    # )  # дата последнего изменения
     # view_counter = models.PositiveIntegerField(
     #     verbose_name='Счетчик просмотров',
     #     help_text='Укажите количество просмотров',

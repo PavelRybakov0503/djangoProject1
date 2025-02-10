@@ -1,6 +1,7 @@
 from django.urls import reverse_lazy
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 
+from blog.forms import PostForm
 from blog.models import Post
 
 
@@ -29,21 +30,21 @@ class PostDetailView(DetailView):
 
 class PostCreateView(CreateView):
     model = Post
+    form_class = PostForm
     fields = ['title', 'content', 'preview']
     template_name = 'blog/post_form.html'
-    success_url = reverse_lazy('blog:home')
+    success_url = reverse_lazy('blog:base')
 
-    def form_valid(self, form): # изменение флага опубликованости при сохранении
+    def form_valid(self, form):  # изменение флага опубликованости при сохранении
         post = form.save(commit=True)
         post.published = True
         post.save()
         return super().form_valid(form)
 
 
-
 class PostUpdateView(UpdateView):
     model = Post
-    fields = ['title', 'content', 'preview']
+    form_class = PostForm
     template_name = 'blog/post_form.html'
     success_url = reverse_lazy('blog:post_detail')
 

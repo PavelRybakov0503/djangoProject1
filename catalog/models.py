@@ -1,5 +1,7 @@
 from django.db import models
 
+from users.models import User
+
 
 class Category(models.Model):
     name = models.CharField(
@@ -69,18 +71,14 @@ class Product(models.Model):
         help_text='Дата последнего изменения',
         auto_now=True
     )
-    # stock = models.PositiveIntegerField(
-    #     verbose_name="Количество в наличии"
-    # )
-    # is_publish = models.BooleanField(
-    #     default=False,
-    #     verbose_name="Опубликовать продукт?"
-    # )  # дата последнего изменения
-    # view_counter = models.PositiveIntegerField(
-    #     verbose_name='Счетчик просмотров',
-    #     help_text='Укажите количество просмотров',
-    #     default=0
-    # )
+    owner = models.ForeignKey(
+        User,
+        verbose_name="Поставщик",
+        help_text="Укажите поставщика товара",
+        blank=True,
+        null=True,
+        on_delete=models.SET_NULL
+    )
 
     class Meta:
         verbose_name = 'Продукт'

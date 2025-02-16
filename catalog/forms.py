@@ -25,7 +25,7 @@ class ProductForm(StyleFormMixin, forms.ModelForm):
         model = Product
         fields = ["name", "description", "price", "image", "category"]
 
-    def clean_price(self):
+   def clean_price(self):
         price = self.cleaned_data.get("price")
         if price < 0:
             raise forms.ValidationError("Цена продукта не может быть отрицательной.")
@@ -42,8 +42,3 @@ class ProductForm(StyleFormMixin, forms.ModelForm):
         if any(word in description.lower() for word in FORBIDDEN_WORDS):
             raise forms.ValidationError("Описание продукта содержит запрещенные слова.")
         return description
-
-# class ProductModeratorForm(StyleFormMixin, forms.ModelForm):
-#     class Meta:
-#         model = Product
-#         fields = ["is_publish"]

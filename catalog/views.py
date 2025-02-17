@@ -16,6 +16,8 @@ class ProductDetailView(DetailView):
 class ProductCreateView(CreateView, LoginRequiredMixin):
     model = Product
     form_class = ProductForm
+    template_name = "catalog/product_form.html"
+    login_url = reverse_lazy("users:login")
     success_url = reverse_lazy('catalog:product_list')
 
     def form_valid(self, form):
@@ -35,4 +37,6 @@ class ProductUpdateView(UpdateView):
 
 class ProductDeleteView(DeleteView):
     model = Product
+    template_name = "catalog/product_delete_confirm.html"
+    login_url = reverse_lazy("users:login")
     success_url = reverse_lazy('catalog:product_list')

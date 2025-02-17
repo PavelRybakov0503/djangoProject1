@@ -25,7 +25,7 @@ class ProductForm(StyleFormMixin, forms.ModelForm):
         model = Product
         fields = ["name", "description", "price", "image", "category"]
 
-   def clean_price(self):
+    def clean_price(self):
         price = self.cleaned_data.get("price")
         if price < 0:
             raise forms.ValidationError("Цена продукта не может быть отрицательной.")

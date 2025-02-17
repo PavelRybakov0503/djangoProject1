@@ -17,11 +17,8 @@ class Migration(migrations.Migration):
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('name',
                  models.CharField(help_text='Введите наименование', max_length=150, verbose_name='Наименование')),
-                (
-                'description', models.CharField(
-                    help_text='Введите описание',
-                    max_length=200,
-                    verbose_name='Описание'
+                ('description', models.CharField(
+                    help_text='Введите описание', max_length=200, verbose_name='Описание'
                 )
                 ),
             ],
@@ -36,8 +33,7 @@ class Migration(migrations.Migration):
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('name',
                  models.CharField(help_text='Введите наименование', max_length=100, verbose_name='Наименование')),
-                (
-                'description', models.CharField(help_text='Введите описание', max_length=100, verbose_name='Описание')
+                ('description', models.CharField(help_text='Введите описание', max_length=100, verbose_name='Описание')
                 ),
                 ('image',
                  models.ImageField(blank=True, help_text='Загрузите фото', null=True, upload_to='Product/photo',

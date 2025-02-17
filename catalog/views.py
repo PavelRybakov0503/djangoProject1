@@ -9,8 +9,10 @@ class ProductListView(ListView):
     model = Product
 
 
-class ProductDetailView(DetailView):
+class ProductDetailView(DetailView, LoginRequiredMixin):
     model = Product
+    template_name = "catalog/product_form.html"
+    login_url = reverse_lazy("users:login")
 
 
 class ProductCreateView(CreateView, LoginRequiredMixin):
@@ -29,13 +31,15 @@ class ProductCreateView(CreateView, LoginRequiredMixin):
         return super().form_valid(form)
 
 
-class ProductUpdateView(UpdateView):
+class ProductUpdateView(UpdateView, LoginRequiredMixin):
     model = Product
     form_class = ProductForm
+    template_name = "catalog/product_form.html"
+    login_url = reverse_lazy("users:login")
     success_url = reverse_lazy('catalog:product_list')
 
 
-class ProductDeleteView(DeleteView):
+class ProductDeleteView(DeleteView, LoginRequiredMixin):
     model = Product
     template_name = "catalog/product_delete_confirm.html"
     login_url = reverse_lazy("users:login")

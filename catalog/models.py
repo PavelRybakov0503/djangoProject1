@@ -83,7 +83,10 @@ class Product(models.Model):
     class Meta:
         verbose_name = 'Продукт'
         verbose_name_plural = 'Продукты'
-        ordering = ['description', 'category', 'price', 'created_at', 'updated_at']
+        ordering = ['description', 'category', 'price', 'created_at', 'updated_at', 'owner']
+        permissions = [
+            ("can_unpublish_product", "can unpublish product"),
+        ]
 
     def __str__(self):
         return self.name

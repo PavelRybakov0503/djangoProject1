@@ -42,3 +42,9 @@ class ProductForm(StyleFormMixin, forms.ModelForm):
         if any(word in description.lower() for word in FORBIDDEN_WORDS):
             raise forms.ValidationError("Описание продукта содержит запрещенные слова.")
         return description
+
+
+class ProductModeratorForm(StyleFormMixin, forms.ModelForm):
+    class Meta:
+        model = Product
+        fields = ["description", "category"]

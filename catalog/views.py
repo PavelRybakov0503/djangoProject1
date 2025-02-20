@@ -1,23 +1,63 @@
-from django.http import HttpResponse
-from django.shortcuts import render
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.core.exceptions import PermissionDenied
+from django.urls import reverse_lazy
+from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
+from catalog.forms import ProductForm, ProductModeratorForm
+from catalog.models import Product
 
 
-def home_view(request):
-    return render(request, 'home.html')
+class ProductListView(ListView):
+    model = Product
 
 
-def contacts_view(request):
-    return render(request, 'contacts.html')
+class ProductDetailView(DetailView, LoginRequiredMixin):
+    model = Product
+    template_name = "catalog/product_form.html"
+    login_url = reverse_lazy("users:login")
+
+    def get_object(self, queryset=None):
+        self.object = super().get_object(queryset)
+        if self.request.user == self.object.owner:
+            self.object.views_counter += 1
+            self.object.save()
+            return self.object
+        raise PermissionDenied
 
 
-def contact(request):
-    if request.method == 'POST':
-        # Получение данных из формы
-        name = request.POST.get('name')
-        message = request.POST.get('message')
-        # Обработка данных (например, сохранение в БД, отправка email и т. д.)
-        print(name)
-        print(message)
-        # Здесь мы просто возвращаем простой ответ
-        return HttpResponse(f"Спасибо, {name}! Ваше сообщение получено.")
-    return render(request, 'contact.html')
+class ProductCreateView(CreateView, LoginRequiredMixin):
+    model = Product
+    form_class = ProductForm
+    template_name = "catalog/product_form.html"
+    login_url = reverse_lazy("users:login")
+    success_url = reverse_lazy('catalog:product_list')
+
+    def form_valid(self, form):
+        product = form.save()
+        user = self.request.user
+
+        product.owner = user
+        product.save()
+        return super().form_valid(form)
+
+
+class ProductUpdateView(UpdateView, LoginRequiredMixin):
+    model = Product
+    form_class = ProductForm
+    template_name = "catalog/product_form.html"
+    login_url = reverse_lazy("users:login")
+    success_url = reverse_lazy('catalog:product_list')
+
+    def get_form_class(self):
+        user = self.request.user
+        if user == self.object.owner:
+            return ProductForm
+        if user.has_perm("catalog.can_unpublish_product"):
+            return ProductModeratorForm
+        raise PermissionDenied
+
+
+class ProductDeleteView(DeleteView, LoginRequiredMixin):
+    model = Product
+    template_name = "catalog/product_delete_confirm.html"
+    login_url = reverse_lazy("users:login")
+    success_url = reverse_lazy('catalog:product_list')

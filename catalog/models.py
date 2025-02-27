@@ -79,6 +79,12 @@ class Product(models.Model):
         null=True,
         on_delete=models.SET_NULL
     )
+    views_counter = models.PositiveIntegerField(
+        default=0
+    )
+    is_publish = models.BooleanField(
+        default=False,
+        verbose_name="Опубликовать продукт?")
 
     class Meta:
         verbose_name = 'Продукт'

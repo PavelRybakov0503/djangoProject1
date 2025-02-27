@@ -3,11 +3,27 @@ from django.core.exceptions import PermissionDenied
 from django.urls import reverse_lazy
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from catalog.forms import ProductForm, ProductModeratorForm
-from catalog.models import Product
+from catalog.models import Product, Category
+from catalog.services import CategoryService
 
 
 class ProductListView(ListView):
     model = Product
+
+    def get_queryset(self):
+        # Проверка наличия кэша
+        from django.core.cache import cache
+        cached_products = cache.get("products")
+        if cached_products:
+            return cached_products
+        # Если кэша нет, получаем объекты из базы и кешируем их
+        products = Product.objects.all()
+        cache.set("products", products, 60 * 5)  # Кэширование на 5 минут
+        user = self.request.user
+        # фильтрация продуктов по опубликованным
+        if user.has_perm("catalog.product_detail.html"):
+            return Product.objects.all()
+        return Product.objects.filter(is_publish=True)
 
 
 class ProductDetailView(DetailView, LoginRequiredMixin):
@@ -61,3 +77,21 @@ class ProductDeleteView(DeleteView, LoginRequiredMixin):
     template_name = "catalog/product_delete_confirm.html"
     login_url = reverse_lazy("users:login")
     success_url = reverse_lazy('catalog:product_list')
+
+
+class CategoryDetailView(DetailView):
+    model = Category
+    template_name = "catalog/category_detail.html"
+    context_object_name = "category"
+
+    def get_context_data(self, **kwargs):
+        # Получаем объекты продуктов и категории
+        products = CategoryService.get_products_from_category(category=self.object)
+        categories = CategoryService.get_all_categories()
+        return super().get_context_data(products=products, categories=categories, **kwargs)
+
+
+class CategoryListView(ListView):
+    model = Category
+    template_name = "catalog/categories_list.html"
+    context_object_name = "categories"

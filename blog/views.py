@@ -31,7 +31,7 @@ class PostDetailView(DetailView):
 class PostCreateView(CreateView):
     model = Post
     form_class = PostForm
-    fields = ['title', 'content', 'preview']
+    # fields = ['title', 'content', 'preview']
     template_name = 'blog/post_form.html'
     success_url = reverse_lazy('blog:base')
 
